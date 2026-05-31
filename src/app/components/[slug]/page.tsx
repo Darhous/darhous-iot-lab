@@ -1,6 +1,6 @@
 import { componentsData } from "@/data/components";
 import { notFound } from "next/navigation";
-import { PackageOpen, AlertTriangle, Zap, CheckCircle, Code2, ArrowLeft } from "lucide-react";
+import { PackageOpen, Zap, ArrowRight, DollarSign, ExternalLink } from "lucide-react";
 import Link from "next/link";
 
 export function generateStaticParams() {
@@ -17,96 +17,58 @@ export default function ComponentDetailPage({ params }: { params: { slug: string
   }
 
   return (
-    <div className="px-4 md:px-16 pt-8 pb-20 max-w-5xl mx-auto space-y-12">
-      <div className="space-y-4">
-        <Link href="/components" className="text-sm font-label-mono text-outline hover:text-primary transition-colors flex items-center gap-1 mb-6">
-          <ArrowLeft size={16} /> العودة للمكونات
+    <div className="min-h-screen bg-[#0A0A0A] text-white selection:bg-[#00FF00]/30 py-12 px-4 sm:px-6 lg:px-8 mt-16 font-cairo" dir="rtl">
+      <div className="max-w-4xl mx-auto space-y-12">
+        <Link href="/components" className="inline-flex items-center gap-2 text-neutral-400 hover:text-[#00FF00] transition-colors">
+          <ArrowRight size={20} />
+          <span>العودة لموسوعة المكونات</span>
         </Link>
-        <div className="flex items-center gap-4 mb-2">
-          <span className="bg-surface-container-high text-outline text-sm font-label-mono px-3 py-1 rounded-full">
-            {comp.category}
-          </span>
-        </div>
-        <h1 className="font-headline-xl text-on-surface flex items-center gap-4">
-          <PackageOpen className="text-primary-fixed-dim" />
-          {comp.name} <span className="text-outline text-2xl">({comp.arabicName})</span>
-        </h1>
-        <p className="font-body-lg text-on-surface-variant max-w-3xl leading-relaxed">
-          {comp.description}
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="space-y-6">
-          <div className="glass-card p-6 rounded-xl border border-primary-fixed-dim/30">
-            <h3 className="font-headline-md text-primary-fixed-dim mb-4 flex items-center gap-2">
-              <Zap /> الأطراف (Pins)
-            </h3>
-            <ul className="space-y-3 font-body-sm text-on-surface">
-              {comp.pins.length > 0 ? comp.pins.map((pin, i) => (
-                <li key={i} className="flex justify-between items-center border-b border-outline-variant/30 pb-2">
-                  <span className="font-label-mono text-secondary-fixed-dim">{pin.name}</span>
-                  <span className="text-sm text-on-surface-variant text-left">{pin.desc}</span>
-                </li>
-              )) : <li className="text-outline text-sm">لا توجد أطراف محددة</li>}
-            </ul>
+        
+        <div className="bg-neutral-900 border border-neutral-800 rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
+          <div className="flex items-center gap-4 mb-6">
+            <span className="bg-[#00FF00]/10 text-[#00FF00] border border-[#00FF00]/30 text-sm font-bold px-4 py-2 rounded-full">
+              {comp.category}
+            </span>
+            {comp.priceRange && (
+              <span className="bg-yellow-500/10 text-yellow-500 border border-yellow-500/30 text-sm font-bold px-4 py-2 rounded-full flex items-center gap-1">
+                <DollarSign size={16} /> السعر التقريبي: {comp.priceRange}
+              </span>
+            )}
           </div>
           
-          <div className="glass-card p-6 rounded-xl">
-            <h3 className="font-headline-md text-tertiary-fixed-dim mb-4 flex items-center gap-2">
-              <CheckCircle /> مثال الاستخدام
-            </h3>
-            <p className="font-body-sm text-on-surface-variant leading-relaxed">
-              {comp.exampleUsage}
-            </p>
-          </div>
-        </div>
+          <h1 className="text-4xl md:text-5xl font-black mb-6 flex items-center gap-4 text-white">
+            <PackageOpen className="text-[#00FF00] w-12 h-12 shrink-0" />
+            {comp.name}
+          </h1>
+          
+          <p className="text-xl text-neutral-400 leading-relaxed max-w-3xl">
+            {comp.description}
+          </p>
 
-        <div className="space-y-6">
-          <div className="glass-card p-6 rounded-xl border-t-4 border-warning">
-            <h3 className="font-headline-md text-warning mb-4 flex items-center gap-2">
-              <AlertTriangle /> ملاحظات السلامة والتوصيل
-            </h3>
-            <p className="font-body-sm text-on-surface leading-relaxed mb-4 pb-4 border-b border-outline-variant/30">
-              <strong className="text-on-surface">التوصيل:</strong> {comp.wiringNotes}
-            </p>
-            <p className="font-body-sm text-error leading-relaxed">
-              <strong className="text-error">تحذير:</strong> {comp.safetyNotes}
-            </p>
-          </div>
-
-          <div className="glass-card p-6 rounded-xl">
-            <h3 className="font-headline-md text-secondary-fixed-dim mb-4 flex items-center gap-2">
-              <Code2 /> روابط ذات صلة
-            </h3>
-            <div className="space-y-4">
-              {comp.relatedLessons.length > 0 && (
-                <div>
-                  <h4 className="text-sm font-label-mono text-outline mb-2">دروس تشرح المكون:</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {comp.relatedLessons.map(l => (
-                      <Link href={`/lessons/${l}`} key={l} className="text-xs bg-surface-container px-2 py-1 rounded text-primary hover:bg-surface-container-high transition-colors">
-                        {l}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-              {comp.relatedProjects.length > 0 && (
-                <div>
-                  <h4 className="text-sm font-label-mono text-outline mb-2">مشاريع تستخدمه:</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {comp.relatedProjects.map(p => (
-                      <Link href={`/projects/${p}`} key={p} className="text-xs bg-surface-container px-2 py-1 rounded text-tertiary hover:bg-surface-container-high transition-colors">
-                        {p}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
+          {comp.buyLink && (
+            <div className="mt-8">
+              <a href={comp.buyLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-[#00FF00] text-black font-bold px-6 py-3 rounded-xl hover:bg-[#00CC00] transition-colors">
+                <span>رابط الشراء المقترح</span>
+                <ExternalLink size={18} />
+              </a>
             </div>
+          )}
+        </div>
+
+        <div className="bg-neutral-900 border border-neutral-800 rounded-3xl p-8 md:p-12">
+          <h3 className="text-2xl font-bold text-white mb-8 flex items-center gap-3">
+            <Zap className="text-[#00FF00]" /> الأطراف والتوصيلات (Pins)
+          </h3>
+          <div className="grid gap-4">
+            {comp.pins.length > 0 ? comp.pins.map((pin, i) => (
+              <div key={i} className="flex flex-col sm:flex-row sm:items-center justify-between bg-neutral-800/50 border border-neutral-700/50 p-4 rounded-xl gap-4">
+                <span className="font-bold text-[#00FF00] text-lg bg-[#00FF00]/10 px-4 py-2 rounded-lg inline-block text-center min-w-[100px]">{pin.name}</span>
+                <span className="text-neutral-300 text-lg sm:text-right flex-1">{pin.description}</span>
+              </div>
+            )) : <div className="text-neutral-500 p-4 text-center">لا توجد أطراف محددة</div>}
           </div>
         </div>
+
       </div>
     </div>
   );

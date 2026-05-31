@@ -1,70 +1,112 @@
+"use client";
+
+import React, { useState } from "react";
 import { codeExamplesData } from "@/data/codeExamples";
-import { Code2, PlayCircle, AlertTriangle } from "lucide-react";
+import { Code2, Search, Filter } from "lucide-react";
+import { globalSearch, getFilteredItems } from "@/lib/search";
+
+const CATEGORIES = ["الكل", "أساسيات", "حساسات", "محركات", "شاشات", "متقدم"];
 
 export default function CodeLabPage() {
-  return (
-    <div className="px-4 md:px-16 pt-8 pb-20 max-w-7xl mx-auto space-y-12">
-      <div className="space-y-4">
-        <h1 className="font-headline-xl text-primary flex items-center gap-4">
-          <Code2 className="w-10 h-10 text-secondary-fixed-dim" />
-          معمل الأكواد (Code Lab)
-        </h1>
-        <p className="font-body-lg text-on-surface-variant max-w-3xl">
-          أكواد جاهزة للنسخ والاستخدام الفوري لمختلف الحساسات والمحركات، مع شرح لكل سطر والأخطاء الشائعة.
-        </p>
-      </div>
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("الكل");
 
-      <div className="space-y-8">
-        {codeExamplesData.map((example) => (
-          <div key={example.id} className="glass-card rounded-xl overflow-hidden border border-outline-variant">
-            <div className="p-6 bg-surface-container/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-outline-variant">
-              <div>
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="px-2 py-1 bg-primary-container text-primary-fixed-dim text-xs font-label-mono rounded">
-                    {example.board}
-                  </span>
-                  <h3 className="font-headline-md text-on-surface">{example.title}</h3>
-                </div>
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {example.components.map((comp, i) => (
-                    <span key={i} className="text-[10px] px-2 py-1 bg-surface-container-high rounded border border-outline-variant text-outline">
-                      {comp}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              {example.simulatorLink && (
-                <a href={example.simulatorLink} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-tertiary-container text-tertiary-fixed-dim rounded font-label-mono text-sm flex items-center gap-2 hover:brightness-110 transition-all shrink-0">
-                  <PlayCircle size={16} /> جرب في المحاكي
-                </a>
-              )}
-            </div>
-            
-            <div className="grid grid-cols-1 lg:grid-cols-2">
-              <div className="p-0 border-b lg:border-b-0 lg:border-l border-outline-variant rtl:lg:border-r rtl:lg:border-l-0">
-                <pre className="p-6 bg-[#1e1e1e] text-green-400 font-mono text-sm overflow-x-auto h-full" dir="ltr">
-                  <code>{example.code}</code>
-                </pre>
-              </div>
-              <div className="p-6 space-y-6 bg-surface-container/20">
-                <div>
-                  <h4 className="font-headline-sm text-primary-fixed-dim mb-2">شرح الكود</h4>
-                  <p className="font-body-sm text-on-surface-variant leading-relaxed">
-                    {example.explanation}
-                  </p>
-                </div>
-                <div className="p-4 bg-error-container/10 border border-error/30 rounded-lg">
-                  <h4 className="font-headline-sm text-error mb-2 flex items-center gap-2">
-                    <AlertTriangle size={16} /> أخطاء شائعة جداً
-                  </h4>
-                  <p className="font-body-sm text-on-surface leading-relaxed">
-                    {example.commonErrors}
-                  </p>
-                </div>
-              </div>
-            </div>
+  // Filter based on search and category
+  let displayedExamples = codeExamplesData;
+  
+  if (searchQuery) {
+    const searchRes = globalSearch(searchQuery);
+    displayedExamples = searchRes.codeExamples;
+  }
+  
+  displayedExamples = getFilteredItems(
+    displayedExamples,
+    selectedCategory,
+    null,
+    (item) => item.category
+  );
+
+  return (
+    <div className="min-h-screen bg-[#0A0A0A] text-white selection:bg-[#00FF00]/30 py-12 px-4 sm:px-6 lg:px-8 mt-16 font-cairo" dir="rtl">
+      <div className="max-w-7xl mx-auto space-y-12">
+        <div className="text-center space-y-4">
+          <h1 className="text-4xl md:text-5xl font-black tracking-tight flex items-center justify-center gap-3">
+            <Code2 className="w-10 h-10 text-[#00FF00]" />
+            معمل الأكواد (Code Lab)
+          </h1>
+          <p className="text-xl text-neutral-400 max-w-3xl mx-auto">
+            مكتبة ضخمة تضم 80 كود برمجي جاهز للنسخ، مصنفة ومنظمة لتسريع بناء مشاريعك الذكية.
+          </p>
+        </div>
+
+        {/* Filters and Search */}
+        <div className="flex flex-col md:flex-row gap-4 mb-8">
+          <div className="relative flex-grow">
+            <Search className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-500 w-5 h-5" />
+            <input 
+              type="text" 
+              placeholder="ابحث عن كود معين..." 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-neutral-900 border border-neutral-800 rounded-xl py-3 pr-12 pl-4 text-white focus:outline-none focus:border-[#00FF00]/50 transition-colors"
+            />
           </div>
-        ))}
+          <div className="relative md:w-64">
+            <Filter className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-500 w-5 h-5" />
+            <select 
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="w-full bg-neutral-900 border border-neutral-800 rounded-xl py-3 pr-12 pl-4 text-white focus:outline-none focus:border-[#00FF00]/50 transition-colors appearance-none cursor-pointer"
+            >
+              {CATEGORIES.map(cat => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="space-y-8">
+          {displayedExamples.length === 0 ? (
+            <div className="text-center py-12 text-neutral-500">لا توجد نتائج مطابقة لبحثك.</div>
+          ) : (
+            displayedExamples.map((example) => (
+              <div key={example.id} className="bg-neutral-900 border border-neutral-800 rounded-xl overflow-hidden shadow-2xl group hover:border-[#00FF00]/30 transition-colors duration-300">
+                <div className="p-6 bg-neutral-800/30 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-neutral-800">
+                  <div>
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="px-3 py-1 bg-neutral-800 text-[#00FF00] text-xs font-bold rounded-full">
+                        {example.category}
+                      </span>
+                      <h3 className="font-bold text-xl">{example.title}</h3>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 lg:grid-cols-2">
+                  <div className="p-0 border-b lg:border-b-0 lg:border-l border-neutral-800 rtl:lg:border-r rtl:lg:border-l-0 relative">
+                    <button 
+                      onClick={() => navigator.clipboard.writeText(example.code)}
+                      className="absolute top-4 left-4 px-3 py-1 bg-neutral-800 text-neutral-400 hover:text-white rounded text-xs transition-colors"
+                    >
+                      نسخ الكود
+                    </button>
+                    <pre className="p-6 bg-[#0A0A0A] text-[#00FF00] font-mono text-sm overflow-x-auto h-full" dir="ltr">
+                      <code>{example.code}</code>
+                    </pre>
+                  </div>
+                  <div className="p-6 space-y-6 bg-neutral-900/50 flex flex-col justify-center">
+                    <div>
+                      <h4 className="font-bold text-lg text-white mb-2">شرح الكود</h4>
+                      <p className="text-neutral-400 leading-relaxed">
+                        {example.description}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
       </div>
     </div>
   );

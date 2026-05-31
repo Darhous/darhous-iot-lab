@@ -31,7 +31,7 @@ export default function PathDetailPage({ params }: { params: { slug: string } })
         </div>
         <h1 className="font-headline-xl text-on-surface mb-4">{path.title}</h1>
         <p className="font-body-lg text-on-surface-variant max-w-3xl leading-relaxed">
-          {path.overview}
+          {path.description}
         </p>
       </div>
 
@@ -42,10 +42,10 @@ export default function PathDetailPage({ params }: { params: { slug: string } })
               <GraduationCap /> المهارات المكتسبة
             </h3>
             <ul className="space-y-3">
-              {path.skillsGained.map((skill, i) => (
+              {path.modules.map((module, i) => (
                 <li key={i} className="flex items-start gap-3 font-body-md text-on-surface">
                   <CheckCircle className="text-secondary-fixed-dim shrink-0 w-5 h-5" />
-                  <span>{skill}</span>
+                  <span>{module}</span>
                 </li>
               ))}
             </ul>
@@ -54,11 +54,9 @@ export default function PathDetailPage({ params }: { params: { slug: string } })
             <h3 className="font-headline-md text-error mb-4 flex items-center gap-2">
               متطلبات مسبقة
             </h3>
-            <ul className="list-disc list-inside space-y-2 font-body-md text-on-surface-variant">
-              {path.prerequisites.map((req, i) => (
-                <li key={i}>{req}</li>
-              ))}
-            </ul>
+            <p className="font-body-md text-on-surface-variant">
+              {path.prerequisites}
+            </p>
           </div>
         </div>
 

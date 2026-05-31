@@ -1,21 +1,61 @@
-export const getLocalMentorResponse = (message: string): string => {
-  const msg = message.toLowerCase();
-  
-  if (msg.includes("اردوينو") || msg.includes("arduino")) {
-    return "الأردوينو هو عقل إلكتروني مصغر. يمكنك برمجته لقراءة حساسات الحرارة أو إضاءة اللمبات. هل تريد كوداً لبرمجة إشارة مرور؟";
-  }
-  if (msg.includes("esp32") || msg.includes("واي فاي") || msg.includes("wifi")) {
-    return "لوحة ESP32 ممتازة جداً لمشاريع إنترنت الأشياء، فهي تحتوي على WiFi وبلوتوث مدمج وتعمل بجهد 3.3 فولت. تذكر ألا توصل حساسات 5 فولت بها مباشرة!";
-  }
-  if (msg.includes("مشروع") || msg.includes("فكرة")) {
-    return "ما رأيك أن نبدأ بمشروع (نظام ري ذكي)؟ ستحتاج إلى حساس رطوبة، ريلاي، ومضخة مياه صغيرة. يمكنك إيجاد الكود في قسم المشاريع.";
-  }
-  if (msg.includes("خطأ") || msg.includes("error") || msg.includes("مشكلة")) {
-    return "الأخطاء البرمجية طبيعية! تأكد من وجود فاصلة منقوطة (;) في نهاية كل سطر في C++، وتأكد أن الأقواس {} مغلقة بشكل صحيح.";
-  }
-  if (msg.includes("حساس") || msg.includes("سنسور") || msg.includes("sensor")) {
-    return "الحساسات أنواع: رقمية تعطي (0 و 1) وتماثلية تعطي نطاقاً من القيم. أي حساس تريد استخدامه بالتحديد؟ (مسافة، حرارة، ضوء؟)";
+// A local rule-based AI mentor for offline/V2 usage
+
+export interface MentorResponse {
+  message: string;
+  suggestedLinks?: { title: string; url: string }[];
+}
+
+export function getLocalMentorResponse(query: string): MentorResponse {
+  const normalized = query.toLowerCase();
+
+  // Keyword matching rules
+  if (normalized.includes("مقاومة") || normalized.includes("resistor")) {
+    return {
+      message: "المقاومة تستخدم لتقليل مرور التيار لحماية القطع الإلكترونية مثل الليد. القيمة الشائعة لليد هي 220 أوم.",
+      suggestedLinks: [{ title: "مكون: المقاومات", url: "/components/resistor" }]
+    };
   }
 
-  return "هذا رد من محرك القواعد المحلي المؤقت للمنصة. في المستقبل سيتم ربطي بنموذج ذكاء اصطناعي متقدم في Darhous AI Academy لتقديم شرح مفصل لكودك.";
-};
+  if (normalized.includes("قانون اوم") || normalized.includes("ohm")) {
+    return {
+      message: "قانون أوم ينص على أن الجهد (V) يساوي التيار (I) مضروباً في المقاومة (R). أو V = I × R.",
+      suggestedLinks: [{ title: "مكون: المقاومات", url: "/components/resistor" }]
+    };
+  }
+
+  if (normalized.includes("مسافة") || normalized.includes("ultrasonic") || normalized.includes("hc-sr04")) {
+    return {
+      message: "حساس المسافة الموجي (Ultrasonic) يرسل موجة صوتية عبر دبوس Trig ويستقبل الصدى عبر Echo. يمكن حساب المسافة بالمعادلة: Distance = (Time × 0.034) / 2.",
+      suggestedLinks: [
+        { title: "حساس المسافة", url: "/components/hc-sr04" },
+        { title: "كود حساس المسافة", url: "/code-lab" }
+      ]
+    };
+  }
+
+  if (normalized.includes("خطأ") || normalized.includes("error") || normalized.includes("مشكلة")) {
+    return {
+      message: "يبدو أنك تواجه مشكلة تقنية. لقد قمنا بتجميع أشهر المشاكل التي تواجه المبتدئين في دليل استكشاف الأخطاء.",
+      suggestedLinks: [{ title: "دليل استكشاف الأخطاء", url: "/troubleshooting" }]
+    };
+  }
+
+  if (normalized.includes("محرك") || normalized.includes("سيرفو") || normalized.includes("motor")) {
+    return {
+      message: "المحركات تسحب تياراً عالياً جداً! لا توصلها مباشرة بمنافذ الأردوينو لتجنب حرقه. استخدم دائماً (درايفر) مثل L298N للـ DC، أو افصل طاقة السيرفو عن الأردوينو.",
+      suggestedLinks: [{ title: "مكون: L298N", url: "/components/l298n" }]
+    };
+  }
+
+  if (normalized.includes("كيف ابدا") || normalized.includes("start") || normalized.includes("مسار")) {
+    return {
+      message: "أفضل طريقة للبدء هي اتباع خارطة طريق منظمة. لقد جهزنا لك مسارات تغطي من الصفر وحتى الاحتراف.",
+      suggestedLinks: [{ title: "خرائط الطريق", url: "/roadmaps" }]
+    };
+  }
+
+  // Fallback response
+  return {
+    message: "مرحباً! أنا المرشد الذكي لمنصة دارحوس لإنترنت الأشياء. يمكنك سؤالي عن المكونات، الأكواد، وتوصيل الدوائر وسأحاول مساعدتك."
+  };
+}

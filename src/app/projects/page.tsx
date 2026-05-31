@@ -19,18 +19,18 @@ export default function ProjectsPage() {
         {projectsData.map((project) => (
           <Link href={`/projects/${project.id}`} key={project.id} className="glass-card p-6 rounded-xl flex flex-col group hover:-translate-y-2 hover:border-tertiary-fixed-dim transition-all duration-300">
             <div className="flex justify-between items-start mb-4">
-              <span className={`text-xs font-label-mono px-2 py-1 rounded ${project.difficulty === 'مبتدئ' ? 'bg-primary-container text-primary-fixed-dim' : project.difficulty === 'متوسط' ? 'bg-tertiary-container text-tertiary-fixed-dim' : 'bg-error-container text-error'}`}>
+              <span className={`text-xs font-label-mono px-2 py-1 rounded ${project.difficulty === 'سهل' ? 'bg-primary-container text-primary-fixed-dim' : project.difficulty === 'متوسط' ? 'bg-tertiary-container text-tertiary-fixed-dim' : 'bg-error-container text-error'}`}>
                 {project.difficulty}
               </span>
               <span className="text-xs font-label-mono text-outline flex items-center gap-1">
-                <Clock size={12}/> {project.timeEstimate}
+                <Clock size={12}/> {project.duration}
               </span>
             </div>
             <h3 className="font-headline-md text-on-surface mb-2 group-hover:text-tertiary-fixed-dim transition-colors">{project.title}</h3>
             <p className="font-body-sm text-on-surface-variant mb-4 line-clamp-2">{project.description}</p>
             
             <div className="flex flex-wrap gap-2 mb-6 mt-auto">
-              {project.hardwareTags.slice(0, 3).map((tag, i) => (
+              {project.components.slice(0, 3).map((tag, i) => (
                 <span key={i} className="text-[10px] px-2 py-1 bg-surface-container-high rounded border border-outline-variant text-outline flex items-center gap-1">
                   <Wrench size={10} /> {tag}
                 </span>

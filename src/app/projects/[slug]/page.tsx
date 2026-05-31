@@ -27,7 +27,7 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
             {project.difficulty}
           </span>
           <span className="bg-surface-container-high text-outline text-sm font-label-mono px-3 py-1 rounded-full flex items-center gap-2">
-            <Clock size={14}/> {project.timeEstimate}
+            <Clock size={14}/> {project.duration}
           </span>
         </div>
         <h1 className="font-headline-xl text-on-surface flex items-center gap-4">
@@ -48,8 +48,7 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
             <ul className="space-y-3 font-body-sm text-on-surface">
               {project.components.map((comp, i) => (
                 <li key={i} className="flex justify-between items-center border-b border-outline-variant/30 pb-2">
-                  <span>{comp.name}</span>
-                  <span className="bg-surface-container px-2 py-1 rounded text-xs">x{comp.qty}</span>
+                  <span>{comp}</span>
                 </li>
               ))}
             </ul>
@@ -57,11 +56,11 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
           
           <div className="glass-card p-6 rounded-xl">
             <h3 className="font-headline-md text-primary-fixed-dim mb-4 flex items-center gap-2">
-              <CheckCircle /> مخرجات التعلم
+              <CheckCircle /> المميزات والخصائص
             </h3>
             <ul className="list-disc list-inside space-y-2 font-body-sm text-on-surface-variant">
-              {project.learningOutcomes.map((out, i) => (
-                <li key={i}>{out}</li>
+              {project.features.map((feature, i) => (
+                <li key={i}>{feature}</li>
               ))}
             </ul>
           </div>
@@ -73,19 +72,8 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
               <Code2 /> التوصيل
             </h3>
             <p className="font-body-sm text-on-surface leading-relaxed">
-              {project.wiringSummary}
+              {project.wiringGuide}
             </p>
-          </div>
-          
-          <div className="glass-card p-6 rounded-xl">
-            <h3 className="font-headline-md text-warning mb-4 flex items-center gap-2">
-              <CheckCircle /> خطوات التنفيذ
-            </h3>
-            <ol className="list-decimal list-inside space-y-3 font-body-sm text-on-surface">
-              {project.steps.map((step, i) => (
-                <li key={i}>{step}</li>
-              ))}
-            </ol>
           </div>
         </div>
       </div>
@@ -97,17 +85,6 @@ export default function ProjectDetailPage({ params }: { params: { slug: string }
         <pre className="p-4 bg-[#1e1e1e] text-green-400 font-mono text-sm overflow-x-auto" dir="ltr">
           <code>{project.codeSnippet}</code>
         </pre>
-      </div>
-
-      <div className="glass-card p-6 rounded-xl border border-error/50">
-        <h3 className="font-headline-md text-error mb-4 flex items-center gap-2">
-          <AlertTriangle /> استكشاف الأخطاء وإصلاحها
-        </h3>
-        <ul className="list-disc list-inside space-y-2 font-body-sm text-on-surface">
-          {project.troubleshooting.map((trouble, i) => (
-            <li key={i}>{trouble}</li>
-          ))}
-        </ul>
       </div>
 
       {project.simulatorLink && (
