@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
+// removed link
 import { componentsData } from "@/data/components";
 import { Cpu, Search, Filter } from "lucide-react";
 import { globalSearch, getFilteredItems } from "@/lib/search";
@@ -86,7 +86,7 @@ export default function ComponentsPage() {
                 <div className="space-y-3 mt-auto">
                   <h4 className="font-bold text-sm text-white">الدبابيس (Pins):</h4>
                   <div className="space-y-2">
-                    {comp.pins?.map((pin: any, i: number) => (
+                    {comp.pins?.map((pin: {name: string, description: string}, i: number) => (
                       <div key={i} className="flex gap-2 text-sm">
                         <span className="font-mono text-[#00FF00] bg-neutral-800 px-2 py-0.5 rounded">{pin.name}</span>
                         <span className="text-neutral-400 line-clamp-1">{pin.description}</span>

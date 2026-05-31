@@ -10,7 +10,7 @@ export default function SimulatorPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("الكل");
 
-  let displayedSimulators = simulatorsData.filter(sim => {
+  const displayedSimulators = simulatorsData.filter(sim => {
     const matchSearch = sim.title.includes(searchQuery) || sim.description.includes(searchQuery);
     const matchCat = selectedCategory === "الكل" || sim.category === selectedCategory;
     return matchSearch && matchCat;

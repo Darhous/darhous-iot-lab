@@ -1,6 +1,6 @@
 import { projectsData } from "@/data/projects";
 import { notFound } from "next/navigation";
-import { Cpu, Clock, CheckCircle, Wrench, AlertTriangle, Code2, ArrowLeft } from "lucide-react";
+import { Cpu, Clock, CheckCircle, Wrench, Code2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 export function generateStaticParams() {

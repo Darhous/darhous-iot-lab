@@ -14,6 +14,7 @@ export default function ChallengeDetailPage({ params }: { params: { slug: string
   useEffect(() => {
     const progress = getProgress();
     if (challenge && progress.completedChallenges.includes(challenge.id)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCompleted(true);
     }
   }, [challenge]);

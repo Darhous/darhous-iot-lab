@@ -14,7 +14,7 @@ export default function ChallengesPage() {
     typeof window !== "undefined" ? getProgress().completedChallenges : []
   );
 
-  let displayedChallenges = challengesData.filter(ch => {
+  const displayedChallenges = challengesData.filter(ch => {
     const matchSearch = ch.title.includes(searchQuery) || ch.description.includes(searchQuery);
     const matchCat = selectedCategory === "الكل" || ch.level === selectedCategory;
     return matchSearch && matchCat;

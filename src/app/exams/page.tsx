@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Brain, Play, CheckCircle, XCircle, Award } from "lucide-react";
-import { examsData, Exam, Question } from "@/data/exams";
+import { examsData, Exam } from "@/data/exams";
 
 export default function ExamsPage() {
   const [activeExam, setActiveExam] = useState<Exam | null>(null);
