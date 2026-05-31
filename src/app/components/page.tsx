@@ -1,65 +1,43 @@
-import { Layers, Cpu, Radio, Zap } from "lucide-react";
+import Link from "next/link";
+import { PackageOpen, ArrowLeft } from "lucide-react";
+import { componentsData } from "@/data/components";
 
-export default function ComponentsLibraryPage() {
-  const components = [
-    {
-      id: "arduino-uno",
-      name: "Arduino Uno R3",
-      category: "Boards",
-      desc: "اللوحة الأساسية للمبتدئين. تحتوي على 14 مخرج رقمي و6 مداخل تماثلية.",
-      icon: <Cpu className="w-12 h-12 text-primary-fixed-dim" />
-    },
-    {
-      id: "esp32",
-      name: "ESP32",
-      category: "IoT",
-      desc: "لوحة متطورة تدعم WiFi و Bluetooth لتطبيقات إنترنت الأشياء.",
-      icon: <Radio className="w-12 h-12 text-secondary-fixed-dim" />
-    },
-    {
-      id: "led",
-      name: "LED",
-      category: "Actuators",
-      desc: "صمام ثنائي باعث للضوء. يحتاج لمقاومة لحمايته من الاحتراق.",
-      icon: <Zap className="w-12 h-12 text-tertiary-fixed-dim" />
-    },
-    {
-      id: "ultrasonic",
-      name: "HC-SR04 Ultrasonic",
-      category: "Sensors",
-      desc: "حساس لقياس المسافة باستخدام الموجات فوق الصوتية.",
-      icon: <Layers className="w-12 h-12 text-primary" />
-    }
-  ];
+export default function ComponentsPage() {
+  const categories = ["Boards", "Sensors", "Actuators", "Displays", "Basic"];
 
   return (
     <div className="px-4 md:px-16 pt-8 max-w-7xl mx-auto space-y-12">
       <div className="space-y-4">
         <h1 className="font-headline-xl text-primary flex items-center gap-4">
-          <Layers className="w-10 h-10 text-primary" />
-          موسوعة المكونات الإلكترونية
+          <PackageOpen className="w-10 h-10 text-secondary-fixed-dim" />
+          مكتبة المكونات
         </h1>
         <p className="font-body-lg text-on-surface-variant max-w-3xl">
-          تعرف على القطع الإلكترونية، طريقة توصيلها، وأكوادها الأساسية.
+          تعرف على كل القطع الإلكترونية، طريقة توصيلها، أطرافها (Pins)، والمشاريع التي تستخدمها.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        {components.map((comp) => (
-          <div key={comp.id} className="glass-card p-6 rounded-xl text-center group hover:-translate-y-2 transition-transform cursor-pointer">
-            <div className="flex justify-center mb-4 group-hover:scale-110 transition-transform">
-              {comp.icon}
+      {categories.map((cat) => {
+        const catItems = componentsData.filter(c => c.category === cat);
+        if (catItems.length === 0) return null;
+        
+        return (
+          <div key={cat} className="space-y-6">
+            <h2 className="font-headline-lg text-on-surface border-b border-outline-variant pb-2">{cat}</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {catItems.map((comp) => (
+                <Link href={`/components/${comp.id}`} key={comp.id} className="glass-card p-4 rounded-xl group hover:border-primary-fixed-dim transition-all">
+                  <h3 className="font-headline-md text-on-surface mb-1 group-hover:text-primary-fixed-dim transition-colors">{comp.name}</h3>
+                  <p className="font-body-sm text-outline mb-4">{comp.arabicName}</p>
+                  <div className="flex justify-end text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                    <ArrowLeft size={16} />
+                  </div>
+                </Link>
+              ))}
             </div>
-            <h3 className="font-headline-md text-on-surface mb-2">{comp.name}</h3>
-            <span className="bg-surface-container-high text-outline text-xs font-label-mono px-2 py-1 rounded inline-block mb-4">
-              {comp.category}
-            </span>
-            <p className="font-body-md text-sm text-on-surface-variant line-clamp-3">
-              {comp.desc}
-            </p>
           </div>
-        ))}
-      </div>
+        );
+      })}
     </div>
   );
 }

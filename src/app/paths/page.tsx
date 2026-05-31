@@ -1,34 +1,8 @@
 import Link from "next/link";
-import { Route, CheckCircle, Lock } from "lucide-react";
+import { Route, CheckCircle, Lock, Clock, Layers } from "lucide-react";
+import { pathsData } from "@/data/paths";
 
 export default function PathsPage() {
-  const paths = [
-    {
-      id: "arduino-basics",
-      title: "أساسيات الأردوينو",
-      level: "مبتدئ",
-      duration: "4 ساعات",
-      status: "active",
-      modules: 8
-    },
-    {
-      id: "sensors-actuators",
-      title: "الحساسات والمحركات",
-      level: "متوسط",
-      duration: "6 ساعات",
-      status: "locked",
-      modules: 12
-    },
-    {
-      id: "esp32-iot",
-      title: "مشاريع إنترنت الأشياء",
-      level: "متقدم",
-      duration: "10 ساعات",
-      status: "locked",
-      modules: 15
-    }
-  ];
-
   return (
     <div className="px-4 md:px-16 pt-8 max-w-7xl mx-auto space-y-12">
       <div className="space-y-4">
@@ -42,8 +16,8 @@ export default function PathsPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {paths.map((path) => (
-          <div key={path.id} className={`glass-card p-6 rounded-xl flex flex-col relative overflow-hidden ${path.status === 'locked' ? 'opacity-75 grayscale hover:grayscale-0' : 'hover:border-primary-fixed-dim'}`}>
+        {pathsData.map((path) => (
+          <Link href={`/paths/${path.id}`} key={path.id} className={`glass-card p-6 rounded-xl flex flex-col relative overflow-hidden transition-all duration-300 hover:-translate-y-2 ${path.status === 'locked' ? 'opacity-75 grayscale hover:grayscale-0' : 'hover:border-primary-fixed-dim'}`}>
             {path.status === 'locked' && (
               <div className="absolute top-4 left-4">
                 <Lock className="text-outline w-5 h-5" />
@@ -55,11 +29,16 @@ export default function PathsPage() {
               </span>
             </div>
             <h3 className="font-headline-md text-on-surface mb-2">{path.title}</h3>
-            <p className="font-label-mono text-sm text-on-surface-variant mb-6 flex items-center gap-4">
-              <span>{path.modules} وحدات</span>
-              <span>{path.duration}</span>
-            </p>
-            <div className="mt-auto">
+            <p className="font-body-sm text-on-surface-variant mb-6 line-clamp-2">{path.overview}</p>
+            <div className="flex flex-wrap gap-4 mt-auto mb-6">
+              <span className="font-label-mono text-xs text-outline flex items-center gap-1">
+                <Layers size={14}/> {path.modules} وحدات
+              </span>
+              <span className="font-label-mono text-xs text-outline flex items-center gap-1">
+                <Clock size={14}/> {path.duration}
+              </span>
+            </div>
+            <div>
               <button className={`w-full py-2 rounded-lg font-label-mono transition-colors flex justify-center items-center gap-2 ${path.status === 'active' ? 'bg-secondary-container text-on-secondary-container hover:brightness-110' : 'bg-surface-container text-outline cursor-not-allowed'}`}>
                 {path.status === 'active' ? (
                   <>متابعة التعلم <CheckCircle size={16} /></>
@@ -68,7 +47,7 @@ export default function PathsPage() {
                 )}
               </button>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>

@@ -1,54 +1,67 @@
-import { Code2, Copy, Play } from "lucide-react";
+import { codeExamplesData } from "@/data/codeExamples";
+import { Code2, PlayCircle, AlertTriangle } from "lucide-react";
 
 export default function CodeLabPage() {
-  const snippets = [
-    {
-      id: 1,
-      title: "وميض الليد (Blink LED)",
-      board: "Arduino Uno",
-      code: `void setup() {\n  pinMode(13, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(13, HIGH);\n  delay(1000);\n  digitalWrite(13, LOW);\n  delay(1000);\n}`,
-    },
-    {
-      id: 2,
-      title: "قراءة حساس مسافة (Ultrasonic)",
-      board: "Arduino Uno",
-      code: `long duration;\nint distance;\n\nvoid setup() {\n  pinMode(9, OUTPUT); // Trig\n  pinMode(10, INPUT); // Echo\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  digitalWrite(9, LOW);\n  delayMicroseconds(2);\n  digitalWrite(9, HIGH);\n  delayMicroseconds(10);\n  digitalWrite(9, LOW);\n  duration = pulseIn(10, HIGH);\n  distance = duration * 0.034 / 2;\n  Serial.println(distance);\n}`,
-    }
-  ];
-
   return (
-    <div className="px-4 md:px-16 pt-8 max-w-7xl mx-auto space-y-12">
+    <div className="px-4 md:px-16 pt-8 pb-20 max-w-7xl mx-auto space-y-12">
       <div className="space-y-4">
         <h1 className="font-headline-xl text-primary flex items-center gap-4">
           <Code2 className="w-10 h-10 text-secondary-fixed-dim" />
           معمل الأكواد (Code Lab)
         </h1>
         <p className="font-body-lg text-on-surface-variant max-w-3xl">
-          أكواد جاهزة للنسخ والاستخدام في مشاريعك. ابحث عن الكود المناسب للوحة والحساس الخاص بك.
+          أكواد جاهزة للنسخ والاستخدام الفوري لمختلف الحساسات والمحركات، مع شرح لكل سطر والأخطاء الشائعة.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {snippets.map((snippet) => (
-          <div key={snippet.id} className="glass-panel p-6 rounded-xl flex flex-col">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="font-headline-md text-on-surface">{snippet.title}</h3>
-              <span className="bg-surface-container-high text-outline text-xs font-label-mono px-2 py-1 rounded">
-                {snippet.board}
-              </span>
+      <div className="space-y-8">
+        {codeExamplesData.map((example) => (
+          <div key={example.id} className="glass-card rounded-xl overflow-hidden border border-outline-variant">
+            <div className="p-6 bg-surface-container/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-outline-variant">
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="px-2 py-1 bg-primary-container text-primary-fixed-dim text-xs font-label-mono rounded">
+                    {example.board}
+                  </span>
+                  <h3 className="font-headline-md text-on-surface">{example.title}</h3>
+                </div>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {example.components.map((comp, i) => (
+                    <span key={i} className="text-[10px] px-2 py-1 bg-surface-container-high rounded border border-outline-variant text-outline">
+                      {comp}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              {example.simulatorLink && (
+                <a href={example.simulatorLink} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-tertiary-container text-tertiary-fixed-dim rounded font-label-mono text-sm flex items-center gap-2 hover:brightness-110 transition-all shrink-0">
+                  <PlayCircle size={16} /> جرب في المحاكي
+                </a>
+              )}
             </div>
-            <div className="relative flex-1 bg-surface-container-lowest border border-outline-variant/30 rounded-lg p-4 overflow-x-auto">
-              <pre className="font-label-mono text-sm text-primary-fixed-dim" dir="ltr">
-                {snippet.code}
-              </pre>
-              <button className="absolute top-2 right-2 bg-surface p-2 rounded border border-outline-variant hover:bg-surface-container-high transition-colors text-on-surface-variant hover:text-primary">
-                <Copy size={16} />
-              </button>
-            </div>
-            <div className="mt-4 flex justify-end gap-4">
-              <button className="flex items-center gap-2 text-sm font-label-mono text-secondary-fixed-dim hover:text-secondary-fixed transition-colors">
-                <Play size={16} /> جرب في المحاكي
-              </button>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2">
+              <div className="p-0 border-b lg:border-b-0 lg:border-l border-outline-variant rtl:lg:border-r rtl:lg:border-l-0">
+                <pre className="p-6 bg-[#1e1e1e] text-green-400 font-mono text-sm overflow-x-auto h-full" dir="ltr">
+                  <code>{example.code}</code>
+                </pre>
+              </div>
+              <div className="p-6 space-y-6 bg-surface-container/20">
+                <div>
+                  <h4 className="font-headline-sm text-primary-fixed-dim mb-2">شرح الكود</h4>
+                  <p className="font-body-sm text-on-surface-variant leading-relaxed">
+                    {example.explanation}
+                  </p>
+                </div>
+                <div className="p-4 bg-error-container/10 border border-error/30 rounded-lg">
+                  <h4 className="font-headline-sm text-error mb-2 flex items-center gap-2">
+                    <AlertTriangle size={16} /> أخطاء شائعة جداً
+                  </h4>
+                  <p className="font-body-sm text-on-surface leading-relaxed">
+                    {example.commonErrors}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         ))}

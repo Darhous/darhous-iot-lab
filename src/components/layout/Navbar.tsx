@@ -1,7 +1,5 @@
 import Link from "next/link";
-import { 
-  Rocket, Terminal, LayoutDashboard, Route, Cpu, Box, LayoutTemplate, MessageSquareCode
-} from "lucide-react";
+import { MessageSquareCode, LayoutDashboard } from "lucide-react";
 
 export default function Navbar() {
   return (
